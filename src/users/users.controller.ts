@@ -2,6 +2,7 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundExce
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { UserResponseDto } from './dtos/user-response.dto';
 
 @Controller('auth')
 export class UsersController {
@@ -11,10 +12,10 @@ export class UsersController {
         return this.userService.create(body.email, body.password);
     }
 
-    @UseInterceptors(SerializeInterceptor)
+    @UseInterceptors(new SerializeInterceptor(UserResponseDto))
     @Get('/:id')
     findUser(@Param('id') id: string) {
-        console.log("running inside handler")
+        console.log("running inside handler");
         const user =  this.userService.findOne(parseInt(id));
         if(!user) {
             throw new NotFoundException('User not found!')
