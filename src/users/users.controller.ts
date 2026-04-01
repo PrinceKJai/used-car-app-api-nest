@@ -1,7 +1,7 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserResponseDto } from './dtos/user-response.dto';
 
 @Controller('auth')
@@ -12,7 +12,7 @@ export class UsersController {
         return this.userService.create(body.email, body.password);
     }
 
-    @UseInterceptors(new SerializeInterceptor(UserResponseDto))
+    @Serialize(UserResponseDto)
     @Get('/:id')
     findUser(@Param('id') id: string) {
         console.log("running inside handler");
