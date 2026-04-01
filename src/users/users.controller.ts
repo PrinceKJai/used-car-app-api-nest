@@ -5,6 +5,7 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserResponseDto } from './dtos/user-response.dto';
 
 @Controller('auth')
+@Serialize(UserResponseDto)
 export class UsersController {
     constructor(private userService: UsersService){}
     @Post('signup')
@@ -12,7 +13,6 @@ export class UsersController {
         return this.userService.create(body.email, body.password);
     }
 
-    @Serialize(UserResponseDto)
     @Get('/:id')
     findUser(@Param('id') id: string) {
         console.log("running inside handler");
