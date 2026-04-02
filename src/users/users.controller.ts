@@ -5,9 +5,11 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 
 @Controller('auth')
 @Serialize(UserResponseDto)
+@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
     constructor(private userService: UsersService, private authService: AuthService){}
 
