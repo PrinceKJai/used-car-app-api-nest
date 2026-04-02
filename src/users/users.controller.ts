@@ -4,21 +4,29 @@ import { UsersService } from './users.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @Controller('auth')
 @Serialize(UserResponseDto)
 export class UsersController {
     constructor(private userService: UsersService, private authService: AuthService){}
 
+    // @Get('whoami')
+    // async getLoggedInUserInfo(@Session() session: any) {
+    //     return this.userService.findOne(session.userId);
+    // }
+
     @Get('whoami')
-    async getLoggedInUserInfo(@Session() session: any) {
-        return this.userService.findOne(session.userId);
+    async getLoggedInUserInfo(@CurrentUser() user: string) {
+        return user;
     }
 
     @Post('signup')
     async createUser(@Body() body: CreateUserDto, @Session() session: any) {
         const user = await this.authService.signup(body.email, body.password);
-        session.userId = user.id;
+        session.email = user.email;
+        // session.userId = user.id;
+        // console.log("sefdgfdfgssion", session);
         return user;
     }
 
