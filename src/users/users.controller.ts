@@ -3,9 +3,9 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserResponseDto } from './dtos/user-response.dto';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('auth')
 @Serialize(UserResponseDto)
@@ -45,9 +45,9 @@ export class UsersController {
     }
 
     @Get('/:id')
-    findUser(@Param('id') id: string) {
+    async findUser(@Param('id') id: string) {
         console.log("running inside handler");
-        const user =  this.userService.findOne(parseInt(id));
+        const user =  await this.userService.findOne(parseInt(id));
         if(!user) {
             throw new NotFoundException('User not found!')
         }
