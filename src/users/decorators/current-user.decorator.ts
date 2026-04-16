@@ -7,6 +7,6 @@ export const CurrentUser = createParamDecorator((_data: never, context: Executio
     //we are able to get the session info since it';s happening after login
     //Once logged in the server sents the session info in cookie which is later sent on with every request
     //hence we are able to see the session info here
-    console.log("request.session",request.session);
+    // console.log("request.session",request.session);
     return request.currentUser;
 })
