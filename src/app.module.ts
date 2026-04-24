@@ -4,9 +4,7 @@ import { AppService } from "./app.service";
 import { UsersModule } from "./users/users.module";
 import { ReportsModule } from "./reports/reports.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
-// import { User } from "./users/user.entity";
-// import { Report } from "./reports/report.entity";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -14,29 +12,24 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    // TypeOrmModule.forRoot({
-    //   type: "sqlite",
-    //   database: "db.sqlite",
-    //   entities: [User, Report],
-    //   synchronize: true,
-    // }),
-    // TypeOrmModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   useFactory: (config: ConfigService) => {
-    //     return {
-    //       type: "sqlite",
-    //       database: config.get<string>("DB_NAME"),
-    //       synchronize: true,
-    //       entities: [User, Report]
-    //     }
-    //   }
-    // }),
-    TypeOrmModule.forRoot({
-      type: "sqlite",
-      database: "db.sqlite",
-      entities: ["dist/**/*.entity.js"],
-      synchronize: false,
-    }),
+    TypeOrmModule.forRoot(
+      process.env.NODE_ENV === "production"
+        ? {
+            type: "postgres",
+            url: process.env.DATABASE_URL,
+            autoLoadEntities: true,
+            synchronize: false,
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          }
+        : {
+            type: "sqlite",
+            database: "db.sqlite",
+            entities: ["dist/**/*.entity.js"],
+            synchronize: false,
+          },
+    ),
     UsersModule,
     ReportsModule,
   ],
